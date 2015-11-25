@@ -36,7 +36,7 @@ def login():
     g.go('http://www.avito.ru/profile/login')
     g.doc.set_input('login', logindata[0])
     g.doc.set_input('password', logindata[1])
-    add_advert()
+    add_advert() # Для теста
     g.doc.submit()
     try:
         if g.doc.select('/html/body/div[1]/div[2]/div/div/h2').text() == u'Вход':
