@@ -3,6 +3,8 @@ from grab import Grab, GrabError, DataNotFound
 import sys
 import argparse
 import os
+import logging
+
 parser = argparse.ArgumentParser(prog="AVITO autopublisher")
 g = Grab()
 
@@ -14,6 +16,7 @@ def login():
     admin@admin.ru
     megapassword
     """
+    logging.basicConfig(level=logging.DEBUG)
     if os.path.exists('login.cfg'):
         with open('login.cfg') as logincfg:
             logindata = logincfg.readlines()
@@ -33,6 +36,7 @@ def login():
     g.go('http://www.avito.ru/profile/login')
     g.doc.set_input('login', logindata[0])
     g.doc.set_input('password', logindata[1])
+    add_advert()
     g.doc.submit()
     try:
         if g.doc.select('/html/body/div[1]/div[2]/div/div/h2').text() == u'Вход':
@@ -159,6 +163,20 @@ def apply_autopub():
         if id_item in web_old_ids:
             g.go('https://www.avito.ru/profile/items/old?item_id[]=%s&start' % id_item)
             print "adding item with id '%s' to active list" % id_item
+
+def add_advert():
+    print("Add new advertisement.")
+    g.go("https://m.avito.ru/add")
+    """
+    for el in g.doc.select('//*[@id="overForm"]/div/div[2]//div[@class="description"]').node_list():
+        item = el.xpath('h3/a')[0]
+        item_id = item.get('name')[5:]
+        result.append((item_id, item.text))
+    return result"""
+    for a in g.doc.select('//select'):
+        print a.text();
+
+
 
 
 def main_loop():
