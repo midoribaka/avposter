@@ -177,7 +177,7 @@ def add_advert():
     from lxml import html
     response = requests.get('https://m.avito.ru/add')
     parsed_body = html.fromstring(response.text)
-    print parsed_body.xpath('//body/section/form/div[@id="category"]/*') #/div[@class="row-controls"]/div[@class="row-control control-category_id"]/select[@id="category_id"]')
+    print parsed_body.xpath('//form/div/div[2]/*')
     print parsed_body.xpath('//a/@href') # Получить аттрибут href для всех ссылок
 
 
