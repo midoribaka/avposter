@@ -7,7 +7,7 @@ import os
 import logging
 import requests
 
-parser = argparse.ArgumentParser(prog="AVITO autopublisher")
+parser = argparse.ArgumentParser(prog="avposter")
 g = Grab()
 
 
