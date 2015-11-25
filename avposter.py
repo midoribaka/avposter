@@ -4,6 +4,7 @@ import sys
 import argparse
 import os
 import logging
+import requests
 
 parser = argparse.ArgumentParser(prog="AVITO autopublisher")
 g = Grab()
@@ -173,9 +174,11 @@ def add_advert():
         item_id = item.get('name')[5:]
         result.append((item_id, item.text))
     return result"""
-    for a in g.doc.select('//select'):
-        print a.text();
-
+    from lxml import html
+    response = requests.get('https://m.avito.ru/add')
+    parsed_body = html.fromstring(response.text)
+    print parsed_body.xpath('//body/section/form/div[@id="category"]/*') #/div[@class="row-controls"]/div[@class="row-control control-category_id"]/select[@id="category_id"]')
+    print parsed_body.xpath('//a/@href') # Получить аттрибут href для всех ссылок
 
 
 
