@@ -1,5 +1,6 @@
 # -*-coding: utf-8 -*-
 from grab import Grab, GrabError, DataNotFound
+from lxml import html
 import sys
 import argparse
 import os
@@ -18,6 +19,7 @@ def login():
     megapassword
     """
     logging.basicConfig(level=logging.DEBUG)
+    g = Grab(log_file="1.html")
     if os.path.exists('login.cfg'):
         with open('login.cfg') as logincfg:
             logindata = logincfg.readlines()
@@ -34,11 +36,12 @@ def login():
                 print>>logincfg, item
         with open ('login.cfg') as logincfg:
             logindata = logincfg.readlines()
-    g.go('http://www.avito.ru/profile/login')
+    g.go('http://m.avito.ru/profile')
     g.doc.set_input('login', logindata[0])
     g.doc.set_input('password', logindata[1])
     add_advert() # Для теста
     g.doc.submit()
+    g.cookies.save_to_file('cookies.txt')
     try:
         if g.doc.select('/html/body/div[1]/div[2]/div/div/h2').text() == u'Вход':
             raise GrabError('Wrong login/password')
@@ -165,22 +168,23 @@ def apply_autopub():
             g.go('https://www.avito.ru/profile/items/old?item_id[]=%s&start' % id_item)
             print "adding item with id '%s' to active list" % id_item
 
+def login_test():
+    g = Grab(log_file="1.html")
+    g.go("http://m.avito.ru/profile")
+    g.doc.set_input("login","nilariel@gmail.com")
+    g.doc.set_input("password","ivveqaem")
+    g.doc.submit()
+    g.cookies.save_to_file('cookies.txt')
+
 def add_advert():
     print("Add new advertisement.")
-    g.go("https://m.avito.ru/add")
-    """
-    for el in g.doc.select('//*[@id="overForm"]/div/div[2]//div[@class="description"]').node_list():
-        item = el.xpath('h3/a')[0]
-        item_id = item.get('name')[5:]
-        result.append((item_id, item.text))
-    return result"""
-    from lxml import html
-    response = requests.get('https://m.avito.ru/add')
-    parsed_body = html.fromstring(response.text)
-    print parsed_body.xpath('//form/div/div[2]/*')
-    print parsed_body.xpath('//a/@href') # Получить аттрибут href для всех ссылок
-
-
+    g = Grab(log_file="2.html")
+    g.load_cookies('cookies.txt')
+    g.go("http://m.avito.ru/add")
+    login_test()
+    test = g.response.body
+    print(test)
+    
 
 def main_loop():
     print "="*40
