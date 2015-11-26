@@ -170,8 +170,8 @@ def apply_autopub():
 def login_test():
     g = Grab(log_file="1.html")
     g.go("http://m.avito.ru/profile")
-    g.doc.set_input("login","") # логин
-    g.doc.set_input("password","") # пароль
+    g.doc.set_input("login","")
+    g.doc.set_input("password","")
     g.doc.submit()
     g.cookies.save_to_file('cookies.txt')
 
@@ -187,11 +187,16 @@ def add_advert():
     test = g.doc.rex_search('')
     """
 
+    def list_to_utf8(seq):
+        t = ["    u'%s'" % s.encode('utf-8') for s in seq]
+        return '[\n' + ',\n'.join(t) + '\n]'
+
     g.go("http://m.avito.ru/add")
     #html = g.response.body
     #print html
     g.tree
-    print g.tree.xpath('/html/body/section/form/div[1]/div[2]/div/select/option[3]/text()')
+    text = g.tree.xpath('/html/body/section/form/div[1]/div[2]/div/select/option[3]/text()')
+    print list_to_utf8(text)
 
     """
     from lxml import html
