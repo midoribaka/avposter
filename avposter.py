@@ -171,8 +171,8 @@ def apply_autopub():
 def login_test():
     g = Grab(log_file="1.html")
     g.go("http://m.avito.ru/profile")
-    g.doc.set_input("login","nilariel@gmail.com")
-    g.doc.set_input("password","ivveqaem")
+    g.doc.set_input("login","#")
+    g.doc.set_input("password","#")
     g.doc.submit()
     g.cookies.save_to_file('cookies.txt')
 
