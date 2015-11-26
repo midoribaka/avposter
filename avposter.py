@@ -5,7 +5,6 @@ import sys
 import argparse
 import os
 import logging
-import requests
 
 parser = argparse.ArgumentParser(prog="avposter")
 g = Grab()
@@ -171,8 +170,8 @@ def apply_autopub():
 def login_test():
     g = Grab(log_file="1.html")
     g.go("http://m.avito.ru/profile")
-    g.doc.set_input("login","#")
-    g.doc.set_input("password","#")
+    g.doc.set_input("login","") # логин
+    g.doc.set_input("password","") # пароль
     g.doc.submit()
     g.cookies.save_to_file('cookies.txt')
 
@@ -182,9 +181,30 @@ def add_advert():
     g.load_cookies('cookies.txt')
     g.go("http://m.avito.ru/add")
     login_test()
-    test = g.response.body
-    print(test)
-    
+    """
+    test = g.doc.rex_search('(<option.*?>(.*)<\/option>)').group(0)
+    print test
+    test = g.doc.rex_search('')
+    """
+
+    g.go("http://m.avito.ru/add")
+    #html = g.response.body
+    #print html
+    g.tree
+    print g.tree.xpath('/html/body/section/form/div[1]/div[2]/div/select/option[3]/text()')
+
+    """
+    from lxml import html
+    import requests
+    page = requests.get('http://econpy.pythonanywhere.com/ex/001.html')
+    tree = html.fromstring(page.content)
+    #This will create a list of buyers:
+    buyers = tree.xpath('//div[@title="buyer-name"]/text()')
+    #This will create a list of prices
+    prices = tree.xpath('//span[@class="item-price"]/text()')
+    print 'Buyers: ', buyers
+    print 'Prices: ', prices
+    """
 
 def main_loop():
     print "="*40
