@@ -170,10 +170,16 @@ def apply_autopub():
 def login_test():
     g = Grab(log_file="1.html")
     g.go("http://m.avito.ru/profile")
-    g.doc.set_input("login","")
-    g.doc.set_input("password","")
+    g.doc.set_input("login","login")
+    g.doc.set_input("password","password")
     g.doc.submit()
     g.cookies.save_to_file('cookies.txt')
+
+
+def list_to_utf8(seq):
+    t = ["    u'%s'" % s.encode('utf-8') for s in seq]
+    return '[\n' + ',\n'.join(t) + '\n]'
+
 
 def add_advert():
     print("Add new advertisement.")
@@ -187,15 +193,11 @@ def add_advert():
     test = g.doc.rex_search('')
     """
 
-    def list_to_utf8(seq):
-        t = ["    u'%s'" % s.encode('utf-8') for s in seq]
-        return '[\n' + ',\n'.join(t) + '\n]'
-
     g.go("http://m.avito.ru/add")
     #html = g.response.body
     #print html
     g.tree
-    text = g.tree.xpath('/html/body/section/form/div[1]/div[2]/div/select/option[3]/text()')
+    text = g.doc.tree.xpath('/html/body/section/form/div[1]/div[2]/div/select/option[3]/text()')
     print list_to_utf8(text)
 
     """
@@ -210,6 +212,33 @@ def add_advert():
     print 'Buyers: ', buyers
     print 'Prices: ', prices
     """
+    description = ["велосипед для кросс-кантри", "рама: алюминиевый сплав", "колеса 29 дюймов", "дисковые тормоза", "амортизационная вилка", "24 скорости"]
+
+    #g.set_input_by_id("category_id", "34") # Выбрать велосипеды
+    #g.set_input_by_id("param_156", "660" ) # Горные
+    #g.set_input_by_id('title', 'Merida Big Nine 20-MD') # Название объявления
+    #g.set_input_by_id('description', description) # Описание
+    #g.set_input_by_id('price', '27410') # Цена
+
+    import urllib2
+    url='http://www.avito.ru/registration'
+    f = urllib2.open(url)
+    c = f.info()['Set cookie'].split(';')[0]
+    ts = c.split('.')[1]
+    req = urllib2.Request(url='http://m.avito.ru/captcha?' + ts, headers = {
+        'Referer':url,
+        'Cookie':c
+    })
+    f = urllib2.urlopen(req)
+    image_data = f.read()
+    open ('test.jpg', 'wb').write(image_data)
+
+    from PIL import Image
+    img = Image.open('test.png')
+    img.show()
+    #captcha = raw_input('Enter the captcha:') # Ввести капчу
+    #g.set_input_by_id('captcha', captcha) # Отдать капчу полю
+
 
 def main_loop():
     print "="*40
