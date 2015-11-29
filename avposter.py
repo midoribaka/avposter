@@ -232,6 +232,19 @@ def add_advert():
     f = urllib2.urlopen(req)
     image_data = f.read()
     open ('test.jpg', 'wb').write(image_data)
+    
+    """
+    from selenium.webdriver import Firefox
+    from PIL import Image 
+
+    browser = Firefox()
+    browser.get(' интересующий сайт ')
+    browser.save_screenshot('current_page')
+    current_page_img = Image.open('current_page')
+    w, h = current_page_img.size
+    captcha_img = current_page_img.crop((575, 505, w-155, h-1820))
+    captcha_img.save('captcha', 'jpeg')
+    """
 
     from PIL import Image
     img = Image.open('test.png')
