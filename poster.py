@@ -4,6 +4,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from PIL import Image
 import unittest
+import os
 
 
 category_id = {1: u"Автомобили",
@@ -60,6 +61,12 @@ category_id = {1: u"Автомобили",
                }
 
 
+content = {"title": u"Fender Stratocaster",
+           "description": u"Fender Stratocaster 1980 года выпуска.",
+           "price": u"20000"
+           }
+
+
 def print_categories():
     for key in category_id:
             print "%s - %s" % (key, category_id[key])
@@ -74,6 +81,25 @@ class Poster(unittest.TestCase):
         self.accept_next_alert = True
 
 
+    def login(self):
+        if os.path.exists('login.cfg'):
+            with open('login.cfg') as logincfg:
+                logindata = logincfg.readlines()
+        else:
+            print "Login.cfg doesn't exist. Creating."
+            data = []
+            logindata = raw_input('Login:')
+            data.append(logindata)
+            del logindata
+            logindata = raw_input('Password:')
+            data.append(logindata)
+            with open ('login.cfg', 'w',) as logincfg:
+                for item in data:
+                    print>>logincfg, item
+            with open ('login.cfg') as logincfg:
+                logindata = logincfg.readlines()
+
+
     def test_poster(self):
         try:
             profile = webdriver.FirefoxProfile()
@@ -81,14 +107,14 @@ class Poster(unittest.TestCase):
             driver = webdriver.Firefox(profile)
             driver.get(self.base_url + "/profile/login")
             driver.find_element_by_name("login").clear()
-            driver.find_element_by_name("login").send_keys("nilariel@gmail.com")
+            driver.find_element_by_name("login").send_keys("#")
             driver.find_element_by_name("password").clear()
-            driver.find_element_by_name("password").send_keys("ivveqaem")
+            driver.find_element_by_name("password").send_keys("#")
             driver.find_element_by_xpath(u"//input[@value='Войти']").click()
             driver.find_element_by_link_text(u"Подать объявление").click()
         except NoSuchElementException:
                 driver.find_element_by_name("password").clear()
-                driver.find_element_by_name("password").send_keys("ivveqaem")
+                driver.find_element_by_name("password").send_keys("#")
 
                 # Show captcha
                 driver.save_screenshot('current_page')
@@ -119,6 +145,9 @@ class Poster(unittest.TestCase):
             driver.find_element_by_id("title").send_keys("Fender Stratocaster")
             driver.find_element_by_name("description").clear()
             driver.find_element_by_name("description").send_keys(u"Fender Stratocaster 1980 года выпуска.")
+            driver.find_element_by_name("price").clear()
+            driver.find_element_by_name("price").send_keys(u"20000")
+            driver.find_element_by_id("image_upload").send_keys("picture.jpg")
 
             captcha = raw_input("Enter the captcha:")
 
