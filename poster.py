@@ -107,14 +107,14 @@ class Poster(unittest.TestCase):
             driver = webdriver.Firefox(profile)
             driver.get(self.base_url + "/profile/login")
             driver.find_element_by_name("login").clear()
-            driver.find_element_by_name("login").send_keys("#")
+            driver.find_element_by_name("login").send_keys("nilariel@gmail.com")
             driver.find_element_by_name("password").clear()
-            driver.find_element_by_name("password").send_keys("#")
+            driver.find_element_by_name("password").send_keys("ivveqaem")
             driver.find_element_by_xpath(u"//input[@value='Войти']").click()
             driver.find_element_by_link_text(u"Подать объявление").click()
         except NoSuchElementException:
                 driver.find_element_by_name("password").clear()
-                driver.find_element_by_name("password").send_keys("#")
+                driver.find_element_by_name("password").send_keys("ivveqaem")
 
                 # Show captcha
                 driver.save_screenshot('current_page')
@@ -142,12 +142,12 @@ class Poster(unittest.TestCase):
             Select(driver.find_element_by_id("category_id")).select_by_visible_text(category_id[category])
             Select(driver.find_element_by_id("param_162")).select_by_visible_text(u"Гитары и другие струнные")
             driver.find_element_by_id("title").clear()
-            driver.find_element_by_id("title").send_keys("Fender Stratocaster")
+            driver.find_element_by_id("title").send_keys(content["title"])
             driver.find_element_by_name("description").clear()
-            driver.find_element_by_name("description").send_keys(u"Fender Stratocaster 1980 года выпуска.")
+            driver.find_element_by_name("description").send_keys(content["description"])
             driver.find_element_by_name("price").clear()
-            driver.find_element_by_name("price").send_keys(u"20000")
-            driver.find_element_by_id("image_upload").send_keys("picture.jpg")
+            driver.find_element_by_name("price").send_keys(content["price"])
+            #driver.find_element_by_id("image_upload").send_keys("picture.jpg")
 
             captcha = raw_input("Enter the captcha:")
 
