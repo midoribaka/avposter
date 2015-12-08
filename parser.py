@@ -4,6 +4,9 @@ import csv
 import logging
 
 from grab.spider import Spider, Task
+from weblib.error import DataNotFound
+
+from avposter import list_to_utf8
 
 links = ["http://lad-rostov.ru/shop/pilnye-diski-almaznye-diski/",
          "http://lad-rostov.ru/shop/sadovo-uborochnyj-instrument/",
@@ -36,15 +39,21 @@ class ExampleSpider(Spider):
         for elem in grab.xpath_list('.//*[@id="context_menu"]//a'):
             yield Task('parse', url=elem.get('href'))
 
-
     def task_parse(self, grab, task):
-        print 'Link is: %s' % task.url
+        try:
+             grab.xpath_list('.//*[@sid="context_menu"]//a')
 
-        post = {
-            'url': task.url,
-            'title': grab.doc.select('.//*[@id="context_menu"]//a').text(),
-        }
-        print(post)
+        except DataNotFound:
+            print("Exception")
+
+        else:
+            print 'Link is: %s' % task.url
+
+            post = {
+                'url': task.url,
+                'title': grab.doc.select('.//*[@id="context_menu"]//a').text(),
+            }
+            print(post)
 
 
 if __name__ == '__main__':
