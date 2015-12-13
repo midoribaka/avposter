@@ -107,14 +107,14 @@ class Poster(unittest.TestCase):
             driver = webdriver.Firefox(profile)
             driver.get(self.base_url + "/profile/login")
             driver.find_element_by_name("login").clear()
-            driver.find_element_by_name("login").send_keys("nilariel@gmail.com")
+            driver.find_element_by_name("login").send_keys("#email")
             driver.find_element_by_name("password").clear()
-            driver.find_element_by_name("password").send_keys("ivveqaem")
+            driver.find_element_by_name("password").send_keys("#password")
             driver.find_element_by_xpath(u"//input[@value='Войти']").click()
             driver.find_element_by_link_text(u"Подать объявление").click()
         except NoSuchElementException:
                 driver.find_element_by_name("password").clear()
-                driver.find_element_by_name("password").send_keys("ivveqaem")
+                driver.find_element_by_name("password").send_keys("#password")
 
                 # Show captcha
                 driver.save_screenshot('current_page')
