@@ -16,24 +16,15 @@ links = ["http://lad-rostov.ru/shop/pilnye-diski-almaznye-diski/",
 category = input("Choose category:")
 
 
-def parser():
-    g.go(links[category])
+# Страница товара
+def content_page():
+    print("Content")
+    print(g.doc.select(".//*[@id='dContent']/h1").text())
 
-    # Страница товара
 
-    if g.doc.select(".//*[@id='dContent']/h1").exists():
-        print("Content")
-        print(g.doc.select(".//*[@id='dContent']/h1").text())
-
-    # Список товаров
-
-    #elif g.doc.select(".//*[@id='page_content']").exists():
-        #print("Catalog")
-
-    # Страница с списком ссылок
-
-    elif g.doc.select(".//*[@id='context_menu']").exists():
-        for elem in g.doc.select('.//*[@id="context_menu"]//a'):
+# Ссылки из контекстного меню
+def context_menu():
+    for elem in g.doc.select('.//*[@id="context_menu"]//a'):
             href = elem.attr("href")
             print href
             print 'Link is: %s' % href
@@ -44,6 +35,41 @@ def parser():
             print(post)
             title = post['title']
             print(title.encode('utf-8'))
+
+# Выбрать, показать ссылки из контекстного меню или списка товаров
+def choose_links():
+    choose = raw_input("Do you want to choose context menu? y/n")
+    if choose == "y":
+        context_menu()
+    elif choose == "n":
+        catalog_page()
+    else:
+        print("Only y/n")
+        choose_links()
+
+# Список товаров
+def catalog_page():
+    print("Catalog")
+    for elem in g.doc.select(".//*[@class='catalog_item_content']//a"):
+        href = elem.attr("href")
+        print (href + "-" + elem.text())
+
+
+def parser():
+    g.go(links[category])
+
+    # Если это страница товара, выбрать информацию из нее
+
+    if g.doc.select(".//*[@id='dContent']/h1").exists():
+        content_page()
+
+    # Если на странице есть контекстное меню, спросить, какие ссылки выводить - из него или из каталога
+
+    elif g.doc.select(".//*[@id='context_menu']").exists():
+        choose_links()
+    else:
+        catalog_page()
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
