@@ -198,10 +198,10 @@ def add_advert():
     browser.get('http://m.avito.ru/profile/login')
     driver.implicitly_wait(10)
     elem = driver.find_element_by_css_selector(".control-self.control-self-email")
-    elem.send_keys("nilariel@gmail.com")
+    elem.send_keys("   ")
     """
     driver.find_element_by_name("password")
-    element.send_keys("ivveqaem")
+    element.send_keys("   ")
     driver.find_element_by_class_name("control-self control-self-submit button button-solid button-blue button-large")
     driver.find_element_by_partial_link_text("Войти")
     element.send_keys(Keys.ENTER)
